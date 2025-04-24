@@ -1,0 +1,306 @@
+/* css/style.css */
+
+/* 基本重置 */
+body {
+    margin: 0;
+    font-family: sans-serif; /* 设置一个基础字体 */
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f4;
+}
+
+.container {
+    min-height: 100vh; /* 确保容器至少和视口一样高 */
+    display: flex; /* 让其子元素 (header 和 main-content-wrapper) 纵向堆叠 */
+    flex-direction: column; /* 使子元素在垂直方向排列 */
+}
+
+.header {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     padding: 10px 20px;
+     background-color: #fff;
+     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+     /* 可以设置固定高度 */
+}
+
+.top-right-buttons button {
+    margin-left: 10px;
+    padding: 8px 15px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #eee;
+}
+
+.top-right-buttons button:hover {
+    background-color: #ddd;
+}
+
+
+.main-content-wrapper {
+    display: flex; /* <-- 这是实现左右布局的关键 */
+    flex-grow: 1; /* 占据 container 剩余的垂直空间 */
+    overflow: hidden; /* 防止侧边栏内容溢出导致整体滚动问题 */
+    flex-direction: row;
+}
+
+.sidebar {
+    width: 300px; /* 设置侧边栏固定宽度 */
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    /* 实现收起/展开的过渡效果 */
+    transition: width 0.3s ease;
+    flex-shrink: 0; /* 防止侧边栏被压缩 */
+    position: relative; /* 用于定位侧边栏内部的绝对定位元素（如收起按钮）*/
+}
+
+/* 侧边栏内容容器 */
+.sidebar-content {
+
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+/* 侧边栏收起状态时的宽度变化（JS会给body添加sidebar-collapsed类）*/
+body.sidebar-collapsed .sidebar {
+    width: 50px; /* 收起后的宽度，根据需要调整 */
+}
+
+body.sidebar-collapsed .sidebar .sidebar-content {
+    display: none; /* 收起后隐藏内容 */
+}
+
+
+/* 侧边栏收起/展开按钮 - 我们会在JS中添加 HTML 和样式 */
+/* 暂时保留旧的按钮样式，等 JS 部分再详细实现 */
+/* .sidebar-toggle { ... } */
+
+
+.main-area {
+    flex-grow: 1; /* 主区域占据 main-content-wrapper 剩余的宽度 */
+    padding: 20px;
+    overflow-y: auto; /* 主区域内容过多时允许滚动 */
+    display: flex; /* 主区域内部也使用 flex 布局 */
+    flex-direction: column; /* 使主区域内部的 section 纵向堆叠 */
+}
+
+/* 控制主区域内各部分的显示/隐藏 */
+#assessment-results,
+#exercise-plan,
+#btn-view-plan { /* 评估结果区域、运动方案区域和查看方案按钮初始隐藏 */
+    display: none;
+    margin-bottom: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#btn-view-plan {
+    width: auto; /* 按钮宽度不是100%了，根据内容自适应或父容器控制 */
+    align-self: center; /* 在 flex 容器中居中 */
+}
+
+/* 评估结果区域内部的 Flex 布局，用于排列可视化图表和文字结果 */
+#assessment-results .visualizations {
+    display: flex;
+    flex-wrap: wrap; /* 空间不足时换行 */
+    gap: 20px; /* 子元素之间的间距 */
+    margin-bottom: 20px;
+}
+
+#assessment-results .visualizations > div {
+    flex: 1; /* 子元素平均分配空间 */
+    min-width: 200px; /* 最小宽度，防止过度挤压 */
+    background-color: #eee; /* 可视化区域的背景 */
+    padding: 15px;
+    border-radius: 4px;
+}
+
+
+/* 人体图容器，初始隐藏 */
+#injury-map-container {
+    display: none;
+    margin-top: 20px;
+    text-align: center; /* 让 SVG 居中 */
+    background-color: #fff; /* 人体图容器背景 */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#injury-map-container h3 {
+    margin-bottom: 10px;
+}
+
+#human-body-map {
+    border: 1px solid #ccc;
+    background-color: #eee; /* 人体图背景 */
+    max-width: 100%; /* 确保在容器内 */
+    height: auto;
+    display: block; /* 移除 SVG 下方的额外空间 */
+    margin: 0 auto; /* SVG 自身居中 */
+}
+
+#marked-injuries-display {
+    margin-top: 15px;
+    text-align: left;
+}
+
+#marked-injuries-display h4 {
+    margin-bottom: 5px;
+}
+
+
+/* 模态框样式 */
+.modal {
+    display: none; /* 默认隐藏 */
+    position: fixed; /* 固定在视口 */
+    z-index: 1000; /* 确保在其他内容之上 */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* 内容过多时允许滚动 */
+    background-color: rgba(0,0,0,0.4); /* 半透明背景遮罩 */
+    justify-content: center; /* Flexbox 居中 */
+    align-items: center; /* Flexbox 居中 */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto; /* 顶部留白，左右居中 */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%; /* 模态框宽度，这里设置了90% */
+    max-width: 900px; /* *** 将最大宽度从700px增加到900px (或尝试95%等其他值) *** */
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    /* Flexbox 居中时，margin: auto 不再需要 */
+    /* transform: translate(-50%, -50%); */ /* 如果需要精确居中，配合 absolute */
+    /* top: 50%; */ /* 如果需要精确居中，配合 absolute */
+    /* left: 50%; */ /* 如果需要精确居中，配合 absolute */
+    overflow: hidden; /* 防止内容溢出 */
+}
+.modal-content img {
+    max-width: 100%; /* 图片最大宽度不超过父容器 */
+    height: auto; /* 高度自动调整，保持比例 */
+    display: block; /* 让图片独占一行 */
+    margin: 0 auto; /* 图片自身居中 */
+    margin-bottom: 0; /* 移除图片下方的留白，因为没有文本了 */
+    border: 1px solid #ccc; /* 可选：给图片加个边框 */
+    border-radius: 4px; /* 可选：圆角 */
+}
+.close-button {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 基本表单样式 */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block; /* 标签独占一行 */
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select {
+    width: calc(100% - 22px); /* 宽度减去 padding 和 border */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* 让 padding 和 border 包含在宽度内 */
+}
+
+/* 单选框和标签 */
+.form-group input[type="radio"] {
+    margin-right: 5px;
+}
+.form-group label[for="injury-no"],
+.form-group label[for="injury-yes"] {
+    display: inline-block; /* 让单选框标签并排 */
+    font-weight: normal;
+    margin-right: 15px;
+}
+
+#btn-assess, #btn-view-plan {
+    display: block; /* 按钮独占一行 */
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+#btn-assess:hover, #btn-view-plan:hover {
+    background-color: #0056b3;
+}
+.modal-content {
+    background-color: #fefefe; /* 非常浅的灰色，接近白色 */
+    /* ... 其他现有样式如 padding, border, box-shadow ... */
+}
+
+/* 模态框内的表格基本样式 - 确保表格有边框和背景色 */
+.modal-content table {
+    width: 100%;
+    border-collapse: collapse;
+    /* ... 其他现有样式 ... */
+}
+
+.modal-content th,
+.modal-content td {
+    border: 1px solid #ddd; /* 单元格边框 */
+    padding: 10px;
+    text-align: left;
+    /* ... 其他现有样式 ... */
+}
+
+.modal-content th {
+    background-color: #f2f2f2; /* 表头背景色 */
+    /* ... 其他现有样式 ... */
+}
+
+.modal-content tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* 斑马纹效果 */
+    /* ... 其他现有样式 ... */
+}
+
+/* SVG 人体图的基本样式 */
+#human-body-map {
+    border: 1px solid #ccc;
+    background-color: #eee; /* 人体图背景 */
+    /* 根据需要设置具体宽度和高度 */
+    max-width: 300px; /* 设置一个最大宽度，防止过大 */
+    height: auto;
+    display: block; /* 移除 SVG 下方的额外空间 */
+    margin: 0 auto; /* SVG 自身居中 */
+}
