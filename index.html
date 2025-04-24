@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>运动健身评估与方案</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <header class="header">
+            <h1>运动健康评估与方案</h1>
+            <div class="top-right-buttons">
+                <button id="btn-diet-ref">饮食参考</button>
+                <button id="btn-calorie-calc">运动热量消耗估算</button>
+            </div>
+        </header>
+
+        <div class="main-content-wrapper">
+
+            <aside class="sidebar">
+                <div class="sidebar-content">
+                    <h2>用户输入</h2>
+                    <form id="user-input-form">
+                        <div class="form-group">
+                            <label for="nickname">昵称:</label>
+                            <input type="text" id="nickname" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">性别:</label>
+                            <select id="gender" required>
+                                <option value="">请选择</option>
+                                <option value="male">男</option>
+                                <option value="female">女</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                             <label for="age">年龄:</label>
+                             <input type="number" id="age" required min="1">
+                        </div>
+                        <div class="form-group">
+                             <label for="height">身高 (cm):</label>
+                             <input type="number" id="height" required min="1">
+                        </div>
+                         <div class="form-group">
+                             <label for="weight">体重 (kg):</label>
+                             <input type="number" id="weight" required min="1">
+                         </div>
+                         <div class="form-group">
+                              <label for="waist">腰围 (cm, 可选):</label>
+                              <input type="number" id="waist" min="0">
+                         </div>
+                         <div class="form-group">
+                              <label for="hip">臀围 (cm, 可选):</label>
+                              <input type="number" id="hip" min="0">
+                         </div>
+                         <div class="form-group">
+                              <label for="exercise-level">运动水平 (可选):</label>
+                              <select id="exercise-level">
+                                  <option value="">请选择</option>
+                                  <option value="sedentary">久坐不动</option>
+                                  <option value="light">偶尔运动</option>
+                                  <option value="moderate">每周1-3次</option>
+                                  <option value="active">每周3-5次</option>
+                                  <option value="very-active">每周5+次</option>
+                               </select>
+                         </div>
+
+                        <div class="form-group">
+                            <label>伤病史:</label>
+                            <input type="radio" id="injury-no" name="injury-status" value="no" checked>
+                            <label for="injury-no">无伤病史</label>
+                            <input type="radio" id="injury-yes" name="injury-status" value="yes">
+                            <label for="injury-yes">有伤病史</label>
+                        </div>
+
+                        <button type="submit" id="btn-assess">进行评估</button>
+
+                    </form>
+                </div>
+                 </aside>
+
+            <main class="main-area">
+
+                <section id="assessment-results" class="results-section">
+                    <h2>评估结果</h2>
+                    <div class="visualizations">
+                        <div class="bmi-viz">
+                             <canvas id="bmi-chart"></canvas>
+                             <p id="bmi-text"></p>
+                        </div>
+                        <div class="whr-viz">
+                             <canvas id="whr-chart"></canvas>
+                             <p id="whr-text"></p>
+                        </div>
+                        <div id="recommended-weight-text">
+                             <p></p>
+                        </div>
+                    </div>
+
+                    <div id="injury-map-container" class="injury-section">
+                        <h3><span id="injury-map-prompt">请在图中标示受伤部位</span></h3>
+                        <svg id="human-body-map" width="300" height="600" viewBox="0 0 300 600" xmlns="http://www.w3.org/2000/svg">
+                            </svg>
+                         <div id="marked-injuries-display">
+                             <h4>已标记伤病部位:</h4>
+                             <ul>
+                                 </ul>
+                         </div>
+                    </div>
+
+                     <button id="btn-view-plan" class="view-plan-button">查看运动方案</button>
+
+                </section>
+
+                <section id="exercise-plan" class="plan-section">
+                    <h2>运动方案</h2>
+                    <div id="plan-content">
+                        <p>方案内容待生成...</p>
+                    </div>
+                </section>
+
+            </main>
+
+        </div>
+
+    </div>
+
+       <div id="modal-diet" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>饮食参考</h2>
+            <div id="diet-content">
+                 <h3>常见食物热量参考 (kcal)</h3>
+                 <table>
+                      <thead>
+                           <tr><th>食物</th><th>单位/份量</th><th>热量 (kcal)</th><th>食物</th><th>单位/份量</th><th>热量 (kcal)</th></tr>
+                      </thead>
+                      <tbody>
+                           <tr><td>米饭</td><td>一碗/135克</td><td>200</td><td>鸡蛋</td><td>一只/60克</td><td>80</td></tr>
+                           <tr><td>面条</td><td>一碗/135克</td><td>280</td><td>鸡腿</td><td>一只/60克</td><td>280</td></tr>
+                           <tr><td>面包</td><td>一片/120克</td><td>70</td><td>猪肉</td><td>一份/60克</td><td>200</td></tr>
+                           <tr><td>白粥</td><td>一碗/135克</td><td>70</td><td>牛肉</td><td>一份/60克</td><td>240</td></tr>
+                           <tr><td>馒头</td><td>一个/100克</td><td>240</td><td>鱼肉</td><td>一份/60克</td><td>240</td></tr>
+                           <tr><td>卷心菜</td><td>100克</td><td>117</td><td>白菜</td><td>100克</td><td>19</td><td>苹果</td><td>一个</td><td>117</td></tr>
+                            <tr><td>菠菜</td><td>100克</td><td>16</td><td>黄瓜</td><td>100克</td><td>12</td><td>香蕉</td><td>一根</td><td>116</td></tr>
+                            <tr><td>花菜</td><td>100克</td><td>31</td><td>海带</td><td>100克</td><td>36</td><td>西瓜</td><td>一片/240克</td><td>31</td></tr>
+                            <tr><td>芹菜</td><td>100克</td><td>22</td><td>韭菜</td><td>100克</td><td>19</td><td>梨子</td><td>一个</td><td>22</td></tr>
+                            <tr><td>汽水</td><td>一罐</td><td>16</td><td>啤酒</td><td>一罐</td><td>120</td><td>甜筒</td><td>一个</td><td>290</td></tr>
+                            <tr><td>豆浆</td><td>一杯</td><td>31</td><td>咖啡</td><td>一罐</td><td>67</td><td>雪糕</td><td>一根</td><td>280</td></tr>
+                            <tr><td>牛奶</td><td>一杯</td><td>22</td><td>珍珠奶茶</td><td>一杯</td><td>160</td><td>圣代</td><td>一个</td><td>300</td></tr>
+                            <tr><td>汉堡</td><td>一个</td><td>440</td><td>苹果派</td><td>一个</td><td>260</td><td>炸鸡块</td><td>一个</td><td>510</td></tr>
+                            <tr><td>炸鸡翅</td><td>一对</td><td>157</td><td>薯条</td><td>一包(小)</td><td>220</td><td>寿司</td><td>一块</td><td>100</td></tr>
+                            <tr><td>蛋挞</td><td>一个</td><td>250</td><td>披萨</td><td>一份</td><td>360</td><td>三明治</td><td>一个</td><td>260</td></tr>
+                            <tr><td>煎饺</td><td>一块</td><td>44</td><td>大薯条</td><td>一包</td><td>400</td><td>奶油寿司</td><td>一份</td><td>330</td></tr>
+                      </tbody>
+                 </table>
+                 <p>数据来源及单位请参考表格，具体数值可能因烹饪方式、食材差异等有所浮动。</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-calorie" class="modal">
+         <div class="modal-content">
+             <span class="close-button">&times;</span>
+             <h2>运动热量消耗参考</h2>
+             <div id="calorie-content">
+                  <img src="sportconsume.jpg" alt="运动热量消耗参考图表">
+                  </div>
+         </div>
+     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+
+
+</body>
+</html>
